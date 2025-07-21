@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retro Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: #000;
+      color: #0f0;
+      padding: 20px;
+      margin: 0;
+    }
+
+    #game-container {
+      max-width: 700px;
+      margin: 0 auto;
+      border: 4px double #0f0;
+      padding: 20px;
+      background-color: #111;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0f0;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    #chatbox {
+      height: 300px;
+      overflow-y: auto;
+      background-color: #000;
+      border: 2px dashed #0f0;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    .message {
+      margin: 10px 0;
+    }
+
+    .user {
+      color: #0ff;
+      text-align: right;
+    }
+
+    .bot {
+      color: #0f0;
+      text-align: left;
+    }
+
+    #input-area {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    #userInput {
+      flex: 1;
+      padding: 10px;
+      background-color: #000;
+      border: 2px solid #0f0;
+      color: #0f0;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+    }
+
+    #sendBtn {
+      padding: 10px;
+      background-color: #0f0;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+    }
+
+    #sendBtn:hover {
+      background-color: #0a0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="game-container">
+  <h1>🎮 RETRO CHATBOT</h1>
+  <div id="chatbox"></div>
+
+  <div id="input-area">
+    <input type="text" id="userInput" placeholder="> Type here...">
+    <button id="sendBtn">SEND</button>
+  </div>
+</div>
+
+<script>
+  const chatbox = document.getElementById("chatbox");
+  const userInput = document.getElementById("userInput");
+  const sendBtn = document.getElementById("sendBtn");
+
+  sendBtn.addEventListener("click", async () => {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    chatbox.innerHTML += `<div class="message user">You: ${message}</div>`;
+    userInput.value = "";
+    chatbox.scrollTop = chatbox.scrollHeight;
+
+    const response = await fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ user_input: message })
+    });
+
+    const data = await response.json();
+    chatbox.innerHTML += `<div class="message bot">Bot: ${data.response}</div>`;
+    chatbox.scrollTop = chatbox.scrollHeight;
+  });
+
+  userInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      sendBtn.click();
+    }
+  });
+</script>
+
+</body>
+</html>
