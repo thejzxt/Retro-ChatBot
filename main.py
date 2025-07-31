@@ -7,11 +7,11 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 
 import os
-from dotenv import load_dotenv  # ✅ new import
+from dotenv import load_dotenv 
 
-load_dotenv()  # ✅ this loads your .env file
+load_dotenv()  
 
-# ✅ Now the key is loaded safely
+
 llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001")
 
 app = FastAPI()
